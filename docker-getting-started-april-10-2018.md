@@ -9,7 +9,7 @@ WORKDIR /go/src
 COPY goapp.go .
 RUN go build -o /go/bin/goapp
 EXPOSE 8080
-ENTRYPOINT ["/goapp"]
+ENTRYPOINT ["go/bin/goapp"]
 ```
 ### Build container image keeping it local
 [Docker build reference](https://docs.docker.com/engine/reference/commandline/build/)
@@ -44,15 +44,15 @@ docker container inspect testapp
 ### Dockerfile for SCRATCH container using mutli-stage build
 ```dockerfile
 FROM golang:1.9 AS build-env
-WORKDIR /
+WORKDIR /go/src/goapp
 COPY goapp.go .
 ENV CGO_ENABLED=0
 ENV GOOS=linux
-RUN go build -ldflags '-w -s' -a -installsuffix -o goapp
+RUN go build -a -tags netgo -ldflags '-w' .
 
 FROM scratch
 EXPOSE 8080
-COPY --from=build-env /goapp /
+COPY --from=build-env /go/src/goapp/goapp /
 ENTRYPOINT ["/goapp"]
 ```
 ### Get a shell inside a SCRATCH container
