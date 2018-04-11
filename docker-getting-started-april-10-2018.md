@@ -55,6 +55,7 @@ EXPOSE 8080
 COPY --from=build-env /go/src/goapp/goapp /
 ENTRYPOINT ["/goapp"]
 ```
+Great blog post on this stuff: https://embano1.github.io/post/scratch/
 ### Looking at another container's file system built from a SCRATCH image
 ```bash
 docker build -t tiny .
@@ -66,8 +67,7 @@ Now you can look around by running commands like:
 ps -ef
 ls -la /proc/1/root/
 ```
-### Get a shell inside a SCRATCH container
-Great blog post on this stuff: https://embano1.github.io/post/scratch/
+### Looking at a container's filesystem from host
 ```bash
 PID=$(docker inspect -f '{{.State.Pid}}' testapp)
 cd /proc/$PID/root
